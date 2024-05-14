@@ -89,7 +89,17 @@ final class MovieQuizViewController: UIViewController {
     }
     
     private func showAnswerResult(isCorrect: Bool) {
-        
+        if isCorrect {
+            imageView.layer.masksToBounds = true
+            imageView.layer.borderWidth = 8
+            imageView.layer.borderColor = UIColor.ypGreen.cgColor
+            imageView.layer.cornerRadius = 20
+        } else {
+            imageView.layer.masksToBounds = true
+            imageView.layer.borderWidth = 8
+            imageView.layer.borderColor = UIColor.ypRed.cgColor
+            imageView.layer.cornerRadius = 20
+        }
     }
     @IBAction private func noButtonClicked(_ sender: UIButton) {
         let currentQuestion = questions[currentQuestionIndex]

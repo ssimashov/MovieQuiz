@@ -53,6 +53,11 @@
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="Sph-GE-qNm" secondAttribute="height" multiplier="2:3" id="9fy-8V-8gm"/>
                                         </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="20"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Рейтинг этого фильма меньше, чем 5?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7gp-pF-vQY" userLabel="Question Label">
                                         <rect key="frame" x="0.0" y="566.33333333333337" width="335" height="71.666666666666629"/>
