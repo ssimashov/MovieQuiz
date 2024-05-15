@@ -75,20 +75,20 @@ final class MovieQuizViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        let currentQuestion = questions[currentQuestionIndex]
-        let firstQuizStep = convert(model: currentQuestion)
-        show(quiz: firstQuizStep)
+        let firstQuestion = questions[currentQuestionIndex]
+        let firstQuizStep = convert(model: firstQuestion)
+        showStep(quiz: firstQuizStep)
     }
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
-        let result = QuizStepViewModel(
+        let questionStep = QuizStepViewModel(
             image: UIImage(named: model.image) ?? UIImage(),
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questions.count)")
-        return result
+        return questionStep
     }
     
-    private func show(quiz step: QuizStepViewModel) {
+    private func showStep(quiz step: QuizStepViewModel) {
         imageView.image = step.image
         textLabel.text = step.question
         counterLabel.text = step.questionNumber
@@ -98,6 +98,7 @@ final class MovieQuizViewController: UIViewController {
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 8
         imageView.layer.cornerRadius = 20
+        
         if isCorrect {
             imageView.layer.borderColor = UIColor.ypGreen.cgColor
             correctAnswers += 1
@@ -111,6 +112,8 @@ final class MovieQuizViewController: UIViewController {
     }
     
     private func showNextQuestionOrResults(){
+        imageView.layer.borderWidth = 0
+        
         if currentQuestionIndex == questions.count - 1 {
             let text = "Ваш результат: \(correctAnswers)/10"
             let viewModel = QuizResultsViewModel(title: "Этот раунд окончен",
@@ -119,9 +122,10 @@ final class MovieQuizViewController: UIViewController {
             show(quiz: viewModel)
         } else {
             currentQuestionIndex += 1
+            
             let currentQuestion = questions[currentQuestionIndex]
             let currentQuizStep = convert(model: currentQuestion)
-            show(quiz: currentQuizStep)
+            showStep(quiz: currentQuizStep)
         }
     }
     
@@ -137,10 +141,10 @@ final class MovieQuizViewController: UIViewController {
             self.correctAnswers = 0
             let firstQuestion = self.questions[self.currentQuestionIndex]
             let viewModel = self.convert(model: firstQuestion)
-            self.show(quiz: viewModel)
+            self.showStep(quiz: viewModel)
         }
-        alert.addAction(action)
         
+        alert.addAction(action)
         self.present(alert, animated: true, completion: nil)
     }
     
@@ -148,14 +152,12 @@ final class MovieQuizViewController: UIViewController {
         let currentQuestion = questions[currentQuestionIndex]
         let givenAnswer = false
         showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
-        
     }
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
         let currentQuestion = questions[currentQuestionIndex]
         let givenAnswer = true
         showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
-        
     }
 }
 
