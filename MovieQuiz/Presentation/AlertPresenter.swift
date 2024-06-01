@@ -12,18 +12,18 @@ final class AlertPresenter: AlertPresenterProtocol {
     weak var alertController: UIViewController?
     
     func show(with model: AlertModel) {
+        
         let alert = UIAlertController(
             title: model.title,
             message: model.message,
             preferredStyle: .alert
         )
         
-        
         let action = UIAlertAction(
             title: model.buttonText,
             style: .default) { _ in
                 model.completion()
-        }
+            }
         
         alert.addAction(action)
         

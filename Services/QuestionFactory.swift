@@ -61,8 +61,9 @@ class QuestionFactory: QuestionFactoryProtocol {
             return 
         }
         
-       let question = questions[safe: index]
+        let question = questions[safe: index]
         delegate?.didReceiveNextQuestion(question: question)
+        return
     }
     
     func setup(delegate: QuestionFactoryDelegate){
