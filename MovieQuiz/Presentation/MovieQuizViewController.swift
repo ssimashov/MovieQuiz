@@ -26,8 +26,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         let questionFactory = QuestionFactory()
         questionFactory.setup(delegate: self)
         self.questionFactory = questionFactory
-        
-        
+      
         let alertPresenter = AlertPresenter()
         alertPresenter.alertController = self
         self.alertPresenter = alertPresenter
@@ -35,20 +34,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         statisticService = StatisticService()
         
         questionFactory.requestNextQuestion()
-        
-        
-    }
-    
-    //MARK: - QuestionFactoryDelegate
-    func didReceiveNextQuestion(question: QuizQuestion?) {
-        guard let question = question else { return}
-        
-        currentQuestion = question
-        let viewModel = convert(model: question)
-        currentQuestionIndex += 1
-        DispatchQueue.main.async { [weak self] in
-            self?.showStep(quiz: viewModel)
-        }
     }
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
@@ -95,10 +80,13 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             
             if let statisticService = statisticService {
                 statisticService.store(correct: correctAnswers, total: questionsAmount)
-                alertText = "Ваш результат: \(correctAnswers)/\(questionsAmount)\nКоличество сыгранных квизов: \(statisticService.gamesCount)\nРекорд: \(statisticService.bestGame.correct)/\(statisticService.bestGame.total) (\(statisticService.bestGame.date.dateTimeString))\nСредняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%"
-            }
-            
-            else {
+                alertText = """
+                Ваш результат: \(correctAnswers)/\(questionsAmount)
+                Количество сыгранных квизов: \(statisticService.gamesCount)
+                Рекорд: \(statisticService.bestGame.correct)/\(statisticService.bestGame.total) (\(statisticService.bestGame.date.dateTimeString))
+                Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%
+                """
+            } else {
                 alertText = correctAnswers == questionsAmount ?
                 "Поздравляем, вы ответили на 10 из 10!" :
                 "Вы ответили на \(correctAnswers) из 10, попробуйте еще раз!"
@@ -107,12 +95,11 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             let alertModel = AlertModel(
                 title: "Этот раунд окончен!",
                 message: alertText,
-                buttonText: "Сыграть еще раз",
-                completion: {
+                buttonText: "Сыграть еще раз"){
                     self.currentQuestionIndex = 0
                     self.correctAnswers = 0
                     self.questionFactory.requestNextQuestion()
-                })
+                }
             guard let alertPresenter = alertPresenter else { return }
             alertPresenter.show(with: alertModel)
         } else {
@@ -137,4 +124,18 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
 }
 
-
+extension MovieQuizViewController {
+  
+    //MARK: - QuestionFactoryDelegate
+    func didReceiveNextQuestion(question: QuizQuestion?) {
+        guard let question = question else { return}
+        
+        currentQuestion = question
+        let viewModel = convert(model: question)
+        currentQuestionIndex += 1
+        DispatchQueue.main.async { [weak self] in
+            self?.showStep(quiz: viewModel)
+        }
+    }
+    
+}
