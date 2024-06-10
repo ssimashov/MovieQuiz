@@ -23,7 +23,6 @@
                 <viewController id="BYZ-38-t0r" customClass="MovieQuizViewController" customModule="MovieQuiz" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="zpv-r6-TMs">
                                 <rect key="frame" x="20" y="69" width="353" height="749"/>
@@ -110,17 +109,23 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="nzM-ch-VBb">
+                                <rect key="frame" x="186.66666666666666" y="416" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
                             <constraint firstItem="zpv-r6-TMs" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="3CA-A2-aMT"/>
+                            <constraint firstItem="nzM-ch-VBb" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="bkt-AI-dv8"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="zpv-r6-TMs" secondAttribute="trailing" constant="20" id="dgf-lf-3Hr"/>
                             <constraint firstItem="zpv-r6-TMs" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="dvW-bK-sLn"/>
+                            <constraint firstItem="nzM-ch-VBb" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="iwb-vm-ghO"/>
                             <constraint firstItem="zpv-r6-TMs" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="svh-RM-290"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="nzM-ch-VBb" id="GGC-bH-rEv"/>
                         <outlet property="counterLabel" destination="Oih-Uc-4se" id="dC5-xn-M8f"/>
                         <outlet property="imageView" destination="Sph-GE-qNm" id="q7L-mH-MYo"/>
                         <outlet property="noButton" destination="DEP-CZ-Vxb" id="Wk9-5L-exH"/>
