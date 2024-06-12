@@ -15,7 +15,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private var correctAnswers = 0
     private let questionsAmount: Int = 10
     
-    private var questionFactory: QuestionFactoryProtocol = QuestionFactory()
+    private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
     private var alertPresenter: AlertPresenterProtocol?
     private var statisticService: StatisticServiceProtocol?
@@ -24,7 +24,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let questionFactory = QuestionFactory()
+        let questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
         questionFactory.setup(delegate: self)
         self.questionFactory = questionFactory
       
@@ -33,16 +33,25 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         self.alertPresenter = alertPresenter
         
         statisticService = StatisticService()
-        
-        questionFactory.requestNextQuestion()
+        showLoadingIndicator()
+        questionFactory.loadData()
+    }
+    
+    func didLoadDataFromServer() {
+        activityIndicator.isHidden = true
+        questionFactory?.requestNextQuestion()
+    }
+    
+    func didFailToLoadData(with error: any Error) {
+        showNetworkError(message: error.localizedDescription)
     }
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
-        let questionStep = QuizStepViewModel(
-            image: UIImage(named: model.image) ?? UIImage(),
+        return QuizStepViewModel(
+            image: UIImage(data: model.image) ?? UIImage(),
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
-        return questionStep
+        
     }
     
     private func showStep(quiz step: QuizStepViewModel) {
@@ -99,12 +108,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                 buttonText: "Сыграть еще раз"){
                     self.currentQuestionIndex = 0
                     self.correctAnswers = 0
-                    self.questionFactory.requestNextQuestion()
+                    self.questionFactory?.loadData()
                 }
             guard let alertPresenter = alertPresenter else { return }
             alertPresenter.show(with: alertModel)
         } else {
-            self.questionFactory.requestNextQuestion()
+            self.questionFactory?.loadData()
         }
     }
     
@@ -138,8 +147,6 @@ extension MovieQuizViewController {
         DispatchQueue.main.async { [weak self] in
             self?.showStep(quiz: viewModel)
         }
-        
-        
     }
     //MARK: - Activity Indicator
     
@@ -162,7 +169,7 @@ extension MovieQuizViewController {
                 self.currentQuestionIndex = 0
                 self.correctAnswers = 0
                 
-                self.questionFactory.requestNextQuestion()
+                self.questionFactory?.loadData()
             }
         alertPresenter?.show(with: model)
     }
