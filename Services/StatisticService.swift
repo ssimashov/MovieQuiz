@@ -19,7 +19,6 @@ final class StatisticService: StatisticServiceProtocol {
     
     private let storage: UserDefaults = .standard
     
-    
     var gamesCount: Int {
         get {
             storage.integer(forKey: Keys.gamesCount.rawValue)

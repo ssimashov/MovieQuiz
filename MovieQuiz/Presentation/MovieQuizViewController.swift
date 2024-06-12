@@ -27,7 +27,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         let questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
         questionFactory.setup(delegate: self)
         self.questionFactory = questionFactory
-      
+        
         let alertPresenter = AlertPresenter()
         alertPresenter.alertController = self
         self.alertPresenter = alertPresenter
@@ -35,15 +35,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         statisticService = StatisticService()
         showLoadingIndicator()
         questionFactory.loadData()
-    }
-    
-    func didLoadDataFromServer() {
-        activityIndicator.isHidden = true
-        questionFactory?.requestNextQuestion()
-    }
-    
-    func didFailToLoadData(with error: any Error) {
-        showNetworkError(message: error.localizedDescription)
     }
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
@@ -110,6 +101,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                     self.correctAnswers = 0
                     self.questionFactory?.loadData()
                 }
+            
             guard let alertPresenter = alertPresenter else { return }
             alertPresenter.show(with: alertModel)
         } else {
@@ -136,7 +128,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
 }
 
 extension MovieQuizViewController {
-  
+    
     //MARK: - QuestionFactoryDelegate
     func didReceiveNextQuestion(question: QuizQuestion?) {
         guard let question = question else { return}
@@ -149,15 +141,27 @@ extension MovieQuizViewController {
         }
     }
     //MARK: - Activity Indicator
-    
     private func showLoadingIndicator(){
         activityIndicator.isHidden = false
         activityIndicator.startAnimating()
     }
     
     private func hideLoadingIndicator(){
-        activityIndicator.isHidden = true
+        DispatchQueue.main.async{ [weak self] in
+            self?.activityIndicator.isHidden = true
+            self?.activityIndicator.stopAnimating()
+        }
     }
+    //MARK: - Load Data
+    func didLoadDataFromServer() {
+        hideLoadingIndicator()
+        questionFactory?.requestNextQuestion()
+    }
+    
+    func didFailToLoadData(with error: any Error) {
+        showNetworkError(message: error.localizedDescription)
+    }
+    
     private func showNetworkError(message: String){
         hideLoadingIndicator()
         
