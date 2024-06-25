@@ -16,7 +16,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         presenter = MovieQuizPresenter(viewController: self)
     }
     
@@ -30,23 +30,23 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     }
     
     func show(quiz result: QuizResultsViewModel) {
-            let message = presenter.makeResultsMessage()
-
-            let alert = UIAlertController(
-                title: result.title,
-                message: message,
-                preferredStyle: .alert)
-
-                let action = UIAlertAction(title: result.buttonText, style: .default) { [weak self] _ in
-                    guard let self = self else { return }
-
-                    self.presenter.restartGame()
-                }
-
-            alert.addAction(action)
-
-            self.present(alert, animated: true, completion: nil)
+        let message = presenter.makeResultsMessage()
+        
+        let alert = UIAlertController(
+            title: result.title,
+            message: message,
+            preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: result.buttonText, style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            
+            self.presenter.restartGame()
         }
+        
+        alert.addAction(action)
+        
+        self.present(alert, animated: true, completion: nil)
+    }
     
     func highlightImageBorder(isCorrectAnswer: Bool) {
         imageView.layer.masksToBounds = true
@@ -61,7 +61,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
             imageView.layer.borderColor = UIColor.ypRed.cgColor
         }
     }
- 
+    
     //MARK: - IBActions
     @IBAction private func noButtonClicked(_ sender: UIButton) {
         presenter.noButtonClicked()
@@ -77,7 +77,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     }
     
     func hideLoadingIndicator(){
-       activityIndicator.isHidden = true
+        activityIndicator.isHidden = true
     }
     
     func showNetworkError(message: String){
@@ -88,10 +88,10 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
             message: message,
             preferredStyle: .alert)
         
-        let action = UIAlertAction(title: "Попробовать еще раз", style: .default) { [weak self] _ in
-                guard let self = self else { return }
-                self.presenter.restartGame()
-            }
+        let action = UIAlertAction(title: "Сыграть еще раз", style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            self.presenter.restartGame()
+        }
         alert.addAction(action)
     }
 }
